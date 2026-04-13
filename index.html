@@ -585,14 +585,73 @@
         </details>
     </div>
 
+    <!-- AI OKTATÓMODUL -->
+    <div class="box purple">
+        <h3>AI oktatómodul — a tudásod új formában</h3>
+        <p>A terv-generálás csak az első lépés. A te videóidból és tudásodból egy <strong>személyre szabott oktatómodul</strong> is készülhet — ami úgy tanítja a tagjaidat, mintha te személyesen magyaráznád nekik.</p>
+
+        <details>
+            <summary>Podcast-stílusú audio összefoglalók (NotebookLM) &rarr;</summary>
+            <div class="detail-content">
+                <p>A Google NotebookLM és hasonló eszközök (Podcastfy, Illuminate) képesek <strong>szöveges tartalomból természetes hangú, podcast-stílusú beszélgetést generálni</strong> két AI hang között. Képzeld el:</p>
+                <ul>
+                    <li>A tag megkapja az edzéstervét, és mellé egy <strong>5 perces audio összefoglalót</strong> ami elmagyarázza miért pont ezeket a gyakorlatokat kapta, mi a logika mögötte</li>
+                    <li>Két AI hang beszélget róla — az egyik kérdez, a másik Marcell módszertanával válaszol. Természetes, hallgatható, akár edzés közben is</li>
+                    <li>Személyre szabott: a térd-problémás tag <strong>más audio-t kap</strong> mint a váll-problémás — mert a tartalom az ő tervéhez igazodik</li>
+                </ul>
+                <p><strong>Technológia:</strong> NotebookLM (Google, ingyenes), Podcastfy (open-source, többnyelvű), vagy AutoContent API (fizetős, de teljes kontroll). Magyar nyelv: Podcastfy és AutoContent támogatja, NotebookLM egyelőre korlátozott.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>Interaktív tanulási mód — kvíz, flashcard, vizuális összefoglaló &rarr;</summary>
+            <div class="detail-content">
+                <p>A NotebookLM nemcsak audio-t tud, hanem <strong>tanulási eszközöket</strong> is generál a forrásanyagból:</p>
+                <ul>
+                    <li><strong>Kvízek:</strong> "Miért fontos a lapocka erősítése váll fájdalomnál?" — a tag visszaellenőrizheti hogy érti-e a módszertant</li>
+                    <li><strong>Flashcardok:</strong> gyakorlat nevek + mire jók + melyik epizódban vannak — ismétlésre</li>
+                    <li><strong>Infografikák:</strong> vizuális összefoglaló a terv logikájáról, testrész-térkép hogy melyik gyakorlat mit céloz</li>
+                </ul>
+                <p>A cél: a tag ne csak <strong>kövesse</strong> a tervet, hanem <strong>értse</strong> is miért csinálja — ami hosszú távon jobb eredményt és erősebb elköteleződést hoz.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>"Tanulj Marcelltől" — személyre szabott learning path &rarr;</summary>
+            <div class="detail-content">
+                <p>A 33 F33 epizód + Marcell összes többi tartalma egy <strong>strukturált tudásbázis</strong>. Ebből az AI személyre szabott tanulási utat építhet:</p>
+                <ul>
+                    <li>A tag szintje és problémája alapján: <em>"Először nézd meg az Epizód 5-öt (elméleti háttér), aztán az Epizód 12-t (gyakorlat), és itt egy kvíz hogy értsd a kapcsolatot"</em></li>
+                    <li>Progresszív: ahogy halad, nehezebb tartalmak nyílnak meg — gamification elemekkel (streak, badge)</li>
+                    <li>Marcell hangja végig: az audio összefoglalók, a motivációs üzenetek, a kvíz visszajelzések — mind a te stílusodban</li>
+                </ul>
+                <p><strong>Miért értékes:</strong> a legtöbb online kurzus "végignézős" — mindenki ugyanazt kapja. Ez <em>adaptív</em>: a térd-problémás tag más úton halad mint a váll-problémás. Ez a jövő oktatási modellje — és te már most beépítheted a Falkába.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>Technikai megvalósítás és effort &rarr;</summary>
+            <div class="detail-content">
+                <p>Az oktatómodul <strong>a meglévő infrastruktúrára épül</strong> — a videó transzkriptek, tagek, és az AI motor már megvan az MVP-ből. Ami új:</p>
+                <div class="detail-row"><div class="dr-label">Audio generálás integráció (Podcastfy / TTS API)</div><div class="dr-hours">10-15 óra</div></div>
+                <div class="detail-row"><div class="dr-label">Kvíz & flashcard modul</div><div class="dr-hours">8-12 óra</div></div>
+                <div class="detail-row"><div class="dr-label">Learning path logika + UI</div><div class="dr-hours">15-20 óra</div></div>
+                <div class="detail-row"><div class="dr-label">Infografika generálás</div><div class="dr-hours">5-8 óra</div></div>
+                <p style="text-align:right; color:#c5a44e; font-weight:700; font-size:0.9rem; margin-top:0.5rem">~38-55 óra &middot; 4-6 hét</p>
+                <p style="margin-top:0.5rem">Ez a Phase 2 vagy 3 része lehet — a béta tagok visszajelzései döntik el mikor.</p>
+            </div>
+        </details>
+    </div>
+
     <!-- TELJES ÚTTERV -->
     <div class="highlight-box">
         <div class="diagram" style="margin:0; border:none; padding:0.5rem 0; background:transparent; font-size:0.72rem; text-align:left;">
 <span class="hl">MVP</span> — F33 AI coach Lite              ~85-118 óra  · 6 hét
 <span class="hl">Phase 2</span> — Teljes Falka + progresszió   ~40-55 óra   · 4-6 hét
 <span class="hl">Phase 3</span> — Premium 365 Klub AI          ~70-95 óra   · 6-8 hét
-<span class="hl">Phase 4</span> — Partner integrációk           ~30-50 óra   · 4-6 hét
-<span class="hl">Phase 5</span> — White-label SaaS (opcionális) ~80-120 óra  · 8-12 hét</div>
+<span class="hl">Phase 4</span> — AI oktatómodul (audio+kvíz)  ~38-55 óra   · 4-6 hét
+<span class="hl">Phase 5</span> — Partner integrációk           ~30-50 óra   · 4-6 hét
+<span class="hl">Phase 6</span> — White-label SaaS (opcionális) ~80-120 óra  · 8-12 hét</div>
         <p style="color:#888; font-size:0.82rem;">Minden phase-nél: mérünk → döntünk → folytatjuk vagy irányt váltunk</p>
     </div>
 
