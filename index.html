@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CustomFalka — MVP Terv</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #e8e8e8; line-height: 1.7; }
+        .c { max-width: 840px; margin: 0 auto; padding: 2rem; }
+
+        .head { text-align: center; padding: 2.5rem 0 1.5rem; border-bottom: 1px solid #2a2a2a; margin-bottom: 2rem; }
+        .head .badge { display: inline-block; padding: 0.3rem 0.8rem; border: 1px solid #c5a44e; border-radius: 100px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #c5a44e; margin-bottom: 0.8rem; }
+        .head h1 { font-size: 1.8rem; font-weight: 800; }
+        .head h1 span { color: #c5a44e; }
+        .head .sub { color: #888; font-size: 0.9rem; margin-top: 0.3rem; }
+
+        h2 { font-size: 1.15rem; font-weight: 700; color: #c5a44e; margin: 2.5rem 0 0.8rem; padding-bottom: 0.35rem; border-bottom: 1px solid #1a1a1a; }
+        h3 { font-size: 1rem; font-weight: 700; color: #e8e8e8; margin-bottom: 0.5rem; }
+        p { color: #999; font-size: 0.93rem; margin-bottom: 0.7rem; }
+        strong { color: #e8e8e8; }
+        em { color: #c5a44e; font-style: normal; font-weight: 600; }
+        a { color: #c5a44e; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .box { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 1.2rem; margin-bottom: 0.8rem; }
+        .box.gold { border-color: #c5a44e; background: #141410; }
+        .box.green { border-color: #166534; background: #0a1a0a; }
+        .box.red { border-color: #7f1d1d; background: #1a0a0a; }
+        .box.blue { border-color: #1e3a5f; background: #0a0a1a; }
+        .box.purple { border-color: #4c1d95; background: #0f0a1a; }
+
+        ul { list-style: none; margin: 0.5rem 0; }
+        ul li { padding: 0.3rem 0; color: #999; font-size: 0.9rem; }
+        ul li::before { content: '→'; color: #c5a44e; margin-right: 0.5rem; font-weight: 600; }
+        ul.check li::before { content: '☐'; }
+        ul.green li::before { color: #22c55e; }
+
+        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+        @media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } }
+        .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; }
+        @media (max-width: 700px) { .grid3 { grid-template-columns: 1fr; } }
+
+        .tag { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 0.3rem; vertical-align: middle; text-transform: uppercase; letter-spacing: 0.03em; }
+        .tag.zsolt { background: #1a0a2a; color: #a78bfa; border: 1px solid #4c1d95; }
+        .tag.szente { background: #0a2a1a; color: #4ade80; border: 1px solid #166534; }
+        .tag.marcell { background: #2a1a0a; color: #fb923c; border: 1px solid #7c4a1a; }
+        .tag.all { background: #1a1a0a; color: #c5a44e; border: 1px solid #c5a44e; }
+        .tag.phase { background: #1e3a5f; color: #93c5fd; border: 1px solid #1e40af; font-size: 0.65rem; }
+
+        .num { font-size: 1.6rem; font-weight: 800; color: #c5a44e; }
+        .num-label { font-size: 0.75rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.1rem; }
+
+        .flow { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; justify-content: center; margin: 1.5rem 0; }
+        .flow .step { background: #141414; border: 1px solid #2a2a2a; border-radius: 8px; padding: 0.6rem 1rem; font-size: 0.82rem; font-weight: 600; text-align: center; min-width: 100px; }
+        .flow .step.gold { border-color: #c5a44e; color: #c5a44e; }
+        .flow .arrow { color: #c5a44e; font-size: 1.2rem; font-weight: 700; }
+
+        .timeline { position: relative; padding-left: 2rem; }
+        .timeline::before { content: ''; position: absolute; left: 0.5rem; top: 0; bottom: 0; width: 2px; background: #2a2a2a; }
+        .tl-item { position: relative; margin-bottom: 1.5rem; }
+        .tl-item::before { content: ''; position: absolute; left: -1.65rem; top: 0.4rem; width: 10px; height: 10px; border-radius: 50%; background: #c5a44e; border: 2px solid #0a0a0a; }
+        .tl-item.done::before { background: #4ade80; }
+        .tl-item .tl-week { font-size: 0.75rem; font-weight: 700; color: #c5a44e; text-transform: uppercase; letter-spacing: 0.05em; }
+        .tl-item.done .tl-week { color: #4ade80; }
+        .tl-item .tl-title { font-size: 0.95rem; font-weight: 600; margin: 0.2rem 0; }
+        .tl-item .tl-desc { font-size: 0.85rem; color: #888; }
+
+        .table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; }
+        .table th, .table td { text-align: left; padding: 0.5rem 0.8rem; border-bottom: 1px solid #1a1a1a; font-size: 0.85rem; }
+        .table th { color: #c5a44e; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .table td { color: #999; }
+
+        .diagram { background: #0d0d0d; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.5rem; margin: 1rem 0; font-family: 'Courier New', monospace; font-size: 0.78rem; color: #888; line-height: 1.5; white-space: pre; overflow-x: auto; }
+        .diagram .hl { color: #c5a44e; font-weight: 700; }
+
+        details { margin: 0.5rem 0; }
+        details summary { cursor: pointer; color: #c5a44e; font-size: 0.85rem; font-weight: 600; padding: 0.3rem 0; user-select: none; }
+        details summary:hover { color: #e8c95e; }
+        details[open] summary { margin-bottom: 0.5rem; }
+        details .detail-content { background: #0d0d0d; border: 1px solid #1a1a1a; border-radius: 8px; padding: 1rem; margin-bottom: 0.5rem; }
+        details .detail-content p { font-size: 0.85rem; margin-bottom: 0.5rem; }
+        details .detail-content ul li { font-size: 0.83rem; }
+        .detail-row { display: grid; grid-template-columns: 1fr 80px; gap: 0.5rem; padding: 0.4rem 0; border-bottom: 1px solid #111; align-items: center; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-row .dr-label { font-size: 0.83rem; color: #999; }
+        .detail-row .dr-hours { font-size: 0.85rem; font-weight: 700; color: #c5a44e; text-align: right; }
+
+        .highlight-box { background: linear-gradient(135deg, #1a1508, #141414); border: 1px solid #c5a44e; border-radius: 10px; padding: 1.5rem; text-align: center; margin: 1.5rem 0; }
+
+        .separator { border: none; border-top: 2px solid #c5a44e; margin: 3rem 0; opacity: 0.2; }
+
+        .foot { text-align: center; padding: 1.5rem; color: #444; font-size: 0.75rem; border-top: 1px solid #1a1a1a; margin-top: 2rem; }
+
+        .warn { background: #1a1a0a; border: 1px solid #555522; border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.85rem; color: #bba; margin: 1rem 0; }
+
+        .shield { display: inline-block; width: 18px; height: 18px; background: #166534; border-radius: 50%; text-align: center; line-height: 18px; font-size: 0.65rem; vertical-align: middle; margin-right: 0.3rem; }
+
+        .link-card { display: block; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 1rem 1.2rem; text-decoration: none; transition: all 0.2s; margin: 0.8rem 0; }
+        .link-card:hover { border-color: #c5a44e; background: #1a1a10; text-decoration: none; }
+        .link-card .lc-title { font-size: 0.9rem; font-weight: 700; color: #c5a44e; }
+        .link-card .lc-desc { font-size: 0.82rem; color: #888; margin-top: 0.2rem; }
+    </style>
+</head>
+<body>
+<div class="c">
+
+    <!-- ==================== HEADER ==================== -->
+    <div class="head">
+        <div class="badge">MVP Terv &middot; 2026. április</div>
+        <h1>Custom<span>Falka</span></h1>
+        <p class="sub">Személyre szabott AI mobilitási coach a Falka közösségnek</p>
+    </div>
+
+    <!-- ==================== MARCELLNEK SZÓLÓ BEVEZETŐ ==================== -->
+    <div class="box gold">
+        <h3>Marcell, röviden</h3>
+        <p style="color:#e8e8e8; font-size:1rem">Csinálunk egy AI-t ami ismeri az F33 programod 33 epizódját, és a tagjaid helyzete alapján — hol fáj, mi a céljuk, mi a szintjük — személyre szabott mobilitási tervet ad nekik. <strong>A te módszertanoddal, a te hangoddon.</strong></p>
+        <p style="color:#e8e8e8; font-size:0.95rem">Tőled <em>5-8 óra</em> kell összesen, 6 hét alatt elosztva. A technikai részt mi csináljuk.</p>
+    </div>
+
+    <!-- ==================== MIT KAPSZ ==================== -->
+    <h2>Mit kapsz</h2>
+
+    <div class="grid2">
+        <div class="box green">
+            <h3>1. Az F33 tudásod digitalizálva</h3>
+            <p>A 33 Loom videód AI-al feldolgozzuk: transzkriptáljuk, kinyerjük a gyakorlatokat, auto-tageljük testrészekre és szintekre. Te átnézed egy admin felületen és jóváhagyod.</p>
+        </div>
+        <div class="box green">
+            <h3>2. Személyre szabott kérdőív</h3>
+            <p>A tagjaid kitöltenek egy 2 perces kérdőívet: hol fáj, mennyit mozognak, mi a céljuk, mennyi idejük van. Szép, mobilbarát, egyszerű.</p>
+        </div>
+        <div class="box green">
+            <h3>3. AI ami úgy gondolkodik mint te</h3>
+            <p>A válaszok alapján az AI kiválasztja a megfelelő F33 epizódokat és gyakorlatokat — pont úgy, mintha te személyesen ajánlanád. A te szavaiddal, a te logikáddal.</p>
+        </div>
+        <div class="box green">
+            <h3>4. A tag megkapja a tervét</h3>
+            <p>Heti bontásban: melyik nap mit csináljon, melyik epizódot nézze meg (Skool linkkel), mennyi ideig, és miért pont azt. Motiváló, személyes, mobilon is szép.</p>
+        </div>
+    </div>
+
+    <div class="flow">
+        <div class="step">Tag belép</div>
+        <div class="arrow">&rarr;</div>
+        <div class="step">Kérdőív</div>
+        <div class="arrow">&rarr;</div>
+        <div class="step gold">AI generál tervet</div>
+        <div class="arrow">&rarr;</div>
+        <div class="step">Személyes F33 program</div>
+    </div>
+
+    <!-- ==================== MI KELL TŐLED ==================== -->
+    <h2>Mi kell tőled — és mennyi idő</h2>
+
+    <div class="box gold">
+        <h3><span class="tag marcell">Marcell</span> Összesen: 5-8 óra (6 hét alatt)</h3>
+        <p>Nem kell programoznod, nem kell technikai dolgokkal foglalkoznod. Négy dolog kell tőled:</p>
+
+        <details>
+            <summary>Részletes bontás &rarr;</summary>
+            <div class="detail-content">
+                <div class="detail-row">
+                    <div class="dr-label"><strong>Loom mappa + Skool URL-ek</strong><br>Megosztod velünk a Loom mappát ahol az F33 videók vannak, és az epizódok Skool URL-jeit.</div>
+                    <div class="dr-hours">30 perc</div>
+                </div>
+                <div class="detail-row">
+                    <div class="dr-label"><strong>Tagek jóváhagyása</strong><br>Az AI elő-tageli a 33 epizódot (testrész, szint, gyakorlat típus). Te átnézed egy admin felületen: jó/nem jó, módosítasz ha kell. Epizódonként ~5 perc. <strong>Ez a legfontosabb lépés</strong> — ettől lesz pontos az AI.</div>
+                    <div class="dr-hours">2-3 óra</div>
+                </div>
+                <div class="detail-row">
+                    <div class="dr-label"><strong>Generált tervek átnézése</strong><br>Csinálunk 10-15 teszt tervet különböző profilokkal ("40 éves, térd fáj" / "25 éves, váll, haladó"). Te megnézed: <em>"Ezt ajánlanám személyesen?"</em> Ebből finomítjuk az AI-t.</div>
+                    <div class="dr-hours">1-2 óra</div>
+                </div>
+                <div class="detail-row">
+                    <div class="dr-label"><strong>Béta tesztcsoport</strong><br>Kijelölsz 10-20 tagot akik elsőként kipróbálják, és írsz egy Skool posztot a bétáról.</div>
+                    <div class="dr-hours">1 óra</div>
+                </div>
+                <p style="text-align:right; color:#c5a44e; font-weight:700; font-size:0.9rem; margin-top:0.5rem">Összesen: ~5-8 óra</p>
+            </div>
+        </details>
+    </div>
+
+    <p>A maradék munka a mi dolgunk:</p>
+
+    <!-- MI CSAPAT -->
+    <div class="grid2">
+        <div class="box">
+            <h3><span class="tag szente">Szente</span> Fejlesztés — 60-80 óra</h3>
+            <p>A teljes technikai megvalósítás: rendszer felépítése, AI pipeline, admin felület, felhasználói felület, biztonság, éles üzembe helyezés.</p>
+            <details>
+                <summary>Részletes bontás &rarr;</summary>
+                <div class="detail-content">
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>Projekt setup & infrastruktúra</strong><br>Az alap rendszer felépítése: adatbázis, felhasználókezelés, biztonság.</div>
+                        <div class="dr-hours">5-8 óra</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>Admin felület</strong><br>Ahol a tageket átnézed és jóváhagyod — egyszerű, átlátható, mobilon is működik.</div>
+                        <div class="dr-hours">10-15 óra</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>Kérdőív</strong><br>A tagok ezt töltik ki. Szép, lépésenkénti form, 6-8 kérdéssel.</div>
+                        <div class="dr-hours">5-8 óra</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>AI terv-generáló motor</strong><br>A technikai mag: a kérdőív válaszok alapján kikeresi a releváns gyakorlatokat, hozzáadja a te magyarázataidat, és személyre szabott tervet ír. Ez a legtöbb munka.</div>
+                        <div class="dr-hours">20-25 óra</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>Terv megjelenítés</strong><br>A tag ezt látja: heti bontás, gyakorlat kártyák Skool linkekkel, mobilbarát.</div>
+                        <div class="dr-hours">8-12 óra</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>Biztonság & élesítés</strong><br>Adatvédelem, jogosultságkezelés, éles rendszer indítás.</div>
+                        <div class="dr-hours">5-8 óra</div>
+                    </div>
+                    <p style="text-align:right; color:#c5a44e; font-weight:700; font-size:0.9rem; margin-top:0.5rem">Összesen: ~60-80 óra</p>
+                </div>
+            </details>
+        </div>
+
+        <div class="box">
+            <h3><span class="tag zsolt">Zsolt</span> Product & AI — 20-30 óra</h3>
+            <p>Videó feldolgozás, az AI "hangolása" hogy úgy beszéljen mint te, UX, koordináció, tesztelés.</p>
+            <details>
+                <summary>Részletes bontás &rarr;</summary>
+                <div class="detail-content">
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>Videók feldolgozása</strong><br>33 F33 epizód letöltése és szöveggé alakítása (AI transzkripció).</div>
+                        <div class="dr-hours">4-6 óra</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>Auto-tagging</strong><br>Script ami az AI-al előre-tageli a videókat (testrész, szint, típus), hogy neked már csak jóváhagyni kelljen.</div>
+                        <div class="dr-hours">3-5 óra</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>AI személyiség hangolása</strong><br>A legfontosabb: úgy állítjuk be az AI-t hogy a te hangvételeden írjon. Tesztelünk sokféle profillal, iterálunk amíg jó.</div>
+                        <div class="dr-hours">5-8 óra</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>UX & szövegezés</strong><br>A kérdőív szövegei, a terv kinézete, hogy a Falka hangulatába illeszkedjen.</div>
+                        <div class="dr-hours">3-4 óra</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="dr-label"><strong>Tesztelés & koordináció</strong><br>Veled és Szentével tartom a kapcsolatot, tesztelem a rendszert, gyűjtöm a visszajelzéseket.</div>
+                        <div class="dr-hours">4-6 óra</div>
+                    </div>
+                    <p style="text-align:right; color:#c5a44e; font-weight:700; font-size:0.9rem; margin-top:0.5rem">Összesen: ~20-30 óra</p>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <div class="highlight-box">
+        <div style="display:flex; justify-content:center; gap:2.5rem; flex-wrap:wrap;">
+            <div style="text-align:center">
+                <div class="num">60-80</div>
+                <div class="num-label"><span class="tag szente">Szente</span> óra</div>
+            </div>
+            <div style="text-align:center">
+                <div class="num">20-30</div>
+                <div class="num-label"><span class="tag zsolt">Zsolt</span> óra</div>
+            </div>
+            <div style="text-align:center">
+                <div class="num">5-8</div>
+                <div class="num-label"><span class="tag marcell">Marcell</span> óra</div>
+            </div>
+        </div>
+        <p style="color:#888; font-size:0.82rem; margin-top:1rem">Összesen: ~85-118 óra &middot; 4 hét fejlesztés + 2 hét béta teszt</p>
+    </div>
+
+    <!-- ==================== ÜTEMTERV ==================== -->
+    <h2>Ütemterv — 6 hét</h2>
+
+    <div class="timeline">
+        <div class="tl-item done">
+            <div class="tl-week">Hét 0 (kész)</div>
+            <div class="tl-title">Előkészítés & meeting</div>
+            <div class="tl-desc">
+                Megbeszéltük a scope-ot, az F33-mal indulunk. Piaci elemzés kész.
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-week">Hét 1 — Setup & tartalom</div>
+            <div class="tl-title">Rendszer felépítés + F33 videók feldolgozása</div>
+            <div class="tl-desc">
+                <span class="tag szente">Szente</span> Rendszer felépítése, adatbázis, biztonság<br>
+                <span class="tag zsolt">Zsolt</span> Loom videók letöltés, transzkripció, auto-tagging<br>
+                <span class="tag marcell">Marcell</span> Loom mappa hozzáférés + Skool URL-ek <em>(30 perc)</em>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-week">Hét 2 — Admin + kérdőív</div>
+            <div class="tl-title">Tag-kezelő felület + kérdőív</div>
+            <div class="tl-desc">
+                <span class="tag szente">Szente</span> Admin felület, kérdőív form<br>
+                <span class="tag zsolt">Zsolt</span> UX, AI hangolás kezdése<br>
+                <span class="tag marcell">Marcell</span> Tagek jóváhagyása az admin felületen <em>(1-2 óra)</em>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-week">Hét 3 — AI mag</div>
+            <div class="tl-title">A terv-generáló motor</div>
+            <div class="tl-desc">
+                <span class="tag szente">Szente</span> AI pipeline fejlesztés<br>
+                <span class="tag zsolt">Zsolt</span> AI tesztelés sokféle profillal, iteráció<br>
+                <span class="tag marcell">Marcell</span> Generált tervek átnézése: "ezt ajánlanám?" <em>(1-2 óra)</em>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-week">Hét 4 — Élesítés</div>
+            <div class="tl-title">Felhasználói felület + production</div>
+            <div class="tl-desc">
+                <span class="tag szente">Szente</span> Terv megjelenítés, mobilbarát, Skool linkek, élesítés<br>
+                <span class="tag zsolt">Zsolt</span> UX tesztelés, végső simítások<br>
+                <span class="tag marcell">Marcell</span> Tesztcsoport kijelölése <em>(30 perc)</em>
+            </div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-week">Hét 5-6 — Béta teszt</div>
+            <div class="tl-title">Éles teszt 10-30 taggal</div>
+            <div class="tl-desc">
+                <span class="tag all">Mindenki</span> Visszajelzések, javítások, terv-minőség finomítás. Mérjük: használják-e, visszatérnek-e, mit mondanak.
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ADATVÉDELEM ==================== -->
+    <h2>Adatvédelem — a tagok adatai biztonságban</h2>
+
+    <p>Ahogy megbeszéltük, ez fontos. A rendszer úgy épül, hogy senki — még te sem — ne lássa az egyes tagok személyes válaszait. Csak összesített számokat kapsz ("50 tag kért térd-fókuszú tervet ezen a héten").</p>
+
+    <div class="grid2">
+        <div class="box green">
+            <h3><span class="shield">✓</span> Védelem</h3>
+            <ul>
+                <li><strong>Adatbázis szintű elkülönítés</strong> — minden tag csak a sajátját látja</li>
+                <li><strong>AI nem tárolja az adatot</strong> — feldolgozza és elfelejti</li>
+                <li><strong>EU adattárolás</strong> — GDPR kompatibilis</li>
+                <li><strong>Törlési jog</strong> — egy gomb, minden adat eltűnik</li>
+            </ul>
+        </div>
+        <div class="box">
+            <h3><span class="shield">✓</span> Nem gyűjtünk</h3>
+            <ul>
+                <li>Orvosi leletet, diagnózist — nem kérjük</li>
+                <li>Chat történetet — nincs chatbot az MVP-ben</li>
+                <li>Semmi harmadik félnek — senki nem kapja meg</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="warn">
+        ⚠️ Minden generált tervnél megjelenik: <em>"Ez nem orvosi tanács. Sérülés vagy fájdalom esetén konzultálj szakemberrel."</em> Ez jogilag véd téged is — az 1. naptól benne lesz.
+    </div>
+
+    <!-- ==================== SIKER MÉRÉSE ==================== -->
+    <h2>Honnan tudjuk hogy működik</h2>
+
+    <div class="grid2">
+        <div class="box">
+            <h3>Elsődleges</h3>
+            <ul>
+                <li><strong>Hány tag</strong> generáltat tervet a 10-30-ból?</li>
+                <li><strong>Visszatérés:</strong> 1 hét múlva újra bejelentkezik-e?</li>
+                <li><strong>A te véleményed:</strong> "Ezt ajánlanám személyesen?"</li>
+            </ul>
+        </div>
+        <div class="box">
+            <h3>Másodlagos</h3>
+            <ul>
+                <li>Tag elégedettség (1-5 értékelés)</li>
+                <li>Elkezdik-e a javasolt F33 epizódokat</li>
+                <li>Segít-e a megtartásban</li>
+            </ul>
+        </div>
+    </div>
+
+    <hr class="separator">
+
+    <!-- ==================== EGYÜTTMŰKÖDÉSI MODELLEK ==================== -->
+    <h2>Hogyan dolgozzunk együtt — javasolt modellek</h2>
+
+    <p>Több modell is szóba jöhet. Még nem kell dönteni — a béta után, valós számok alapján tudjuk a legjobbat választani. Ezeket érdemes átgondolni:</p>
+
+    <div class="box gold">
+        <h3>A) Fejlesztés + havi karbantartás</h3>
+        <p>Egyszeri fejlesztési díj az MVP-ért, utána havi karbantartás (hosting, bugfix, AI finomhangolás, új tartalom feldolgozás). <strong>Kiszámítható mindkettőnknek.</strong></p>
+        <details>
+            <summary>Előnyök / hátrányok &rarr;</summary>
+            <div class="detail-content">
+                <ul class="green">
+                    <li><strong>Neked:</strong> fix költség, nincs meglepetés. Bármikor leállíthatod a havidíjat.</li>
+                    <li><strong>Nekünk:</strong> stabil bevétel, motiváció a minőségre.</li>
+                </ul>
+                <ul>
+                    <li>Hátrány: a fix díj nem ösztönöz arra, hogy a rendszer a maximumot hozza ki a közösségedből.</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+
+    <div class="box gold">
+        <h3>B) Alacsony belépő + részesedés az eredményből</h3>
+        <p>Alacsonyabb egyszeri díj, cserébe a CustomFalka-nak tulajdonítható bevétel egy százaléka (upsell, megtartás). <strong>Közös érdek: ha neked jó, nekünk is jó.</strong></p>
+        <details>
+            <summary>Előnyök / hátrányok &rarr;</summary>
+            <div class="detail-content">
+                <ul class="green">
+                    <li><strong>Neked:</strong> minimális kockázat — ha nem működik, nem fizettél sokat.</li>
+                    <li><strong>Nekünk:</strong> ha működik, hosszú távon motiválóbb. Ösztönöz hogy tényleg hatékony legyen.</li>
+                </ul>
+                <ul>
+                    <li>Hátrány: nehezebb mérni mi tulajdonítható a CustomFalka-nak. Bizalomra épül.</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+
+    <div class="box gold">
+        <h3>C) Hibrid: kicsi mindenből (javasolt)</h3>
+        <p>Alacsony egyszeri + alacsony havi + alacsony részesedés. <strong>A kockázat oszlik, a motiváció megvan mindkét oldalon.</strong></p>
+        <details>
+            <summary>Miért ez lehet a legjobb start &rarr;</summary>
+            <div class="detail-content">
+                <p>Az MVP kicsi, a piac ismeretlen, a számok még nem igazoltak. A hibrid modellel:</p>
+                <ul class="green">
+                    <li>Nem fizetsz sokat előre</li>
+                    <li>Mi nem dolgozunk ingyen</li>
+                    <li>A havi díj fedezi az üzemeltetést</li>
+                    <li>A részesedés motivál mindenkit</li>
+                    <li>A béta után a valós adatok alapján újratárgyaljuk</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+
+    <div class="box">
+        <h3>D) Partneri modell</h3>
+        <p>Ha a CustomFalka-ból egy más Skool creatoroknak is értékesíthető termék lesz, együtt vihetjük tovább. <strong>Csak akkor ha a béta igazolja az ötletet</strong> — erről a számok után beszélünk.</p>
+    </div>
+
+    <hr class="separator">
+
+    <!-- ==================== FALKA SZINTEK ==================== -->
+    <h2>A Falka szintjeidbe illeszkedik</h2>
+
+    <p>Ahogy megbeszéltük, a tier rendszeredbe épül be:</p>
+
+    <div class="grid3">
+        <div class="box">
+            <h3>Havi tagság</h3>
+            <p><strong>CustomFalka Lite</strong> — korlátozott használat (pl. havi 2 terv). Elég hogy érezze az értéket és kedvet kapjon az upgrade-hez.</p>
+        </div>
+        <div class="box gold">
+            <h3>Éves tagság</h3>
+            <p><strong>CustomFalka Full</strong> — korlátlan AI, teljes F33 tudás. Ez az "igazi" termék ami miatt érdemes éves tagságot venni.</p>
+        </div>
+        <div class="box green">
+            <h3>365 Klub</h3>
+            <p><strong>Teljes AI coach</strong> — edzés + táplálkozás + chatbot + külső tudásbázisok. Mintha személyesen coachingolnád.</p>
+        </div>
+    </div>
+
+    <div class="warn">
+        ⚠️ Az MVP a <strong>Lite verziót</strong> szállítja. A Full és 365 Klub a béta számok után jön — lépésenként.
+    </div>
+
+    <!-- ==================== NEXT STEPS ==================== -->
+    <h2>Következő lépések</h2>
+
+    <div class="box gold">
+        <h3>Ezen a héten</h3>
+        <ul class="check">
+            <li><span class="tag zsolt">Zsolt</span> Szente tech review + kapacitás visszajelzés</li>
+            <li><span class="tag zsolt">Zsolt</span> Loom mappa hozzáférés kérése tőled</li>
+            <li><span class="tag all">Hárman</span> Rövid sync call: véglegesítjük a scope-ot és az indulás dátumot</li>
+        </ul>
+    </div>
+
+    <div class="box">
+        <h3>Jövő hét (ha indulunk)</h3>
+        <ul class="check">
+            <li><span class="tag szente">Szente</span> Rendszer alap felépítése</li>
+            <li><span class="tag zsolt">Zsolt</span> Első 5 F33 videó feldolgozás teszt</li>
+            <li><span class="tag marcell">Marcell</span> F33 epizód lista véglegesítés</li>
+        </ul>
+    </div>
+
+    <hr class="separator">
+
+    <!-- ==================== JÖVŐKÉP ==================== -->
+    <h2>Ami az MVP után jöhet</h2>
+
+    <p>Az MVP az alap. Ha a béta működik, sok irányba mehetünk. Ezek <strong>ötletek, nem ígéretek</strong> — a számok döntik el mi a következő lépés.</p>
+
+    <div class="box blue">
+        <h3><span class="tag phase">Phase 2</span> Teljes Falka tudástár + progresszió</h3>
+        <p>Az F33-on túl: erőedzés, rehab, további programok. A tag visszajelzi hogyan ment, az AI adaptálja a tervet.</p>
+        <details>
+            <summary>Effort &rarr;</summary>
+            <div class="detail-content">
+                <div class="detail-row"><div class="dr-label">Új tartalom feldolgozás</div><div class="dr-hours">10-15 óra</div></div>
+                <div class="detail-row"><div class="dr-label">Progresszió rendszer</div><div class="dr-hours">15-20 óra</div></div>
+                <div class="detail-row"><div class="dr-label">Szintkezelés (havi vs éves jogosultság)</div><div class="dr-hours">5-8 óra</div></div>
+                <div class="detail-row"><div class="dr-label">AI bővítés</div><div class="dr-hours">8-10 óra</div></div>
+                <p style="text-align:right; color:#c5a44e; font-weight:700; font-size:0.9rem; margin-top:0.5rem">~40-55 óra &middot; 4-6 hét</p>
+            </div>
+        </details>
+    </div>
+
+    <div class="box blue">
+        <h3><span class="tag phase">Phase 3</span> Premium 365 Klub AI</h3>
+        <p>Táplálkozás AI, chatbot, külső tudásbázisok (Galpin, Stanford), tudatos álmodás kurzus, heti riportok.</p>
+        <details>
+            <summary>Effort &rarr;</summary>
+            <div class="detail-content">
+                <div class="detail-row"><div class="dr-label">Táplálkozás AI</div><div class="dr-hours">20-25 óra</div></div>
+                <div class="detail-row"><div class="dr-label">Külső tudásbázisok</div><div class="dr-hours">10-15 óra</div></div>
+                <div class="detail-row"><div class="dr-label">Chatbot / real-time AI</div><div class="dr-hours">15-20 óra</div></div>
+                <div class="detail-row"><div class="dr-label">Tudatos álmodás kurzus</div><div class="dr-hours">8-12 óra</div></div>
+                <div class="detail-row"><div class="dr-label">Tanulás interakciókból</div><div class="dr-hours">15-20 óra</div></div>
+                <p style="text-align:right; color:#c5a44e; font-weight:700; font-size:0.9rem; margin-top:0.5rem">~70-95 óra &middot; 6-8 hét</p>
+            </div>
+        </details>
+    </div>
+
+    <!-- PARTNER ÖTLETEK -->
+    <div class="box purple">
+        <h3>Partner lehetőségek</h3>
+        <p>Ha a tagok bíznak az AI ajánlásokban, az a terven túl is működhet:</p>
+
+        <details>
+            <summary>Bio élelmiszerek & táplálékkiegészítők &rarr;</summary>
+            <div class="detail-content">
+                <p>Az AI tudja mit edz a tag — ebből személyre szabott <strong>kiegészítő ajánlás</strong>. Partner bio bolt, az általad jóváhagyott termékek, kedvezményes árak. A tag egy kattintással rendel.</p>
+                <ul>
+                    <li><strong>Példa:</strong> "A térdrehabodhoz magnézium és kollagén segít — itt Marcell ajánlott terméke kedvezménnyel"</li>
+                    <li><strong>Fontos:</strong> csak amit te is használsz és ajánlasz — a hitelességed a tét</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Fitnesz eszközök & kellékek &rarr;</summary>
+            <div class="detail-content">
+                <p>Az F33-hoz kellékek kellenek: masszázslabda, foam roller, ellenállás szalagok. Az AI tudja melyik gyakorlathoz mi kell.</p>
+                <ul>
+                    <li><strong>Példa:</strong> "A Lógásmester epizódhoz szükséged lesz egy szalagra — itt Marcell kedvence"</li>
+                    <li><strong>Opció:</strong> Falka-branded termékek — a te neved, a te minőséged</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Fizioterapeuta / csontkovácsoló hálózat &rarr;</summary>
+            <div class="detail-content">
+                <p>Ha a tag problémája túlmutat az AI-on, ajánlhat személyes konzultációt — nálad vagy a hálózatodban.</p>
+                <ul>
+                    <li>Az AI felismeri a "piros zászlókat" (régóta tartó, romló fájdalom) → ajánl személyes vizsgálatot</li>
+                    <li>Ez jogilag is véd — az AI tudja mikor NE adjon tanácsot</li>
+                </ul>
+            </div>
+        </details>
+
+        <details>
+            <summary>Alvás & regeneráció &rarr;</summary>
+            <div class="detail-content">
+                <p>A tudatos álmodás kurzusoddal kombinálva: alvás, meditáció, regeneráció. Ez motiválhatja a 365 Klub upgrade-et.</p>
+            </div>
+        </details>
+
+        <details>
+            <summary>White-label SaaS — más Skool creatoroknak &rarr;</summary>
+            <div class="detail-content">
+                <p>A technológia nem Falka-specifikus — bármelyik Skool creator használhatja: jóga, erőemelés, táplálkozás.</p>
+                <ul>
+                    <li><strong>Te lennél az első referencia:</strong> "Marcellnél működik — nálad is fog."</li>
+                    <li>Ezt csak a sikeres béta után — előbb bizonyítsuk be nálad.</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+
+    <!-- TELJES ÚTTERV -->
+    <div class="highlight-box">
+        <div class="diagram" style="margin:0; border:none; padding:0.5rem 0; background:transparent; font-size:0.72rem; text-align:left;">
+<span class="hl">MVP</span> — F33 AI coach Lite              ~85-118 óra  · 6 hét
+<span class="hl">Phase 2</span> — Teljes Falka + progresszió   ~40-55 óra   · 4-6 hét
+<span class="hl">Phase 3</span> — Premium 365 Klub AI          ~70-95 óra   · 6-8 hét
+<span class="hl">Phase 4</span> — Partner integrációk           ~30-50 óra   · 4-6 hét
+<span class="hl">Phase 5</span> — White-label SaaS (opcionális) ~80-120 óra  · 8-12 hét</div>
+        <p style="color:#888; font-size:0.82rem;">Minden phase-nél: mérünk → döntünk → folytatjuk vagy irányt váltunk</p>
+    </div>
+
+    <div class="box gold">
+        <p style="color:#e8e8e8; font-size:0.95rem;"><strong>A lényeg:</strong> Most csak az MVP-re fókuszálunk. 6 hét múlva lesznek valós adatok — azok alapján döntünk a folytatásról együtt.</p>
+    </div>
+
+    <!-- ==================== HÁTTÉRANYAG ==================== -->
+    <h2>Háttéranyag</h2>
+
+    <a href="customfalka-stresstest-intel.html" class="link-card">
+        <div class="lc-title">Stresszteszt & Piaci elemzés →</div>
+        <div class="lc-desc">Kockázatok, lehetőségek, versenytárs térkép. Megnéztük hol vannak a lyukak — és miért éri meg mégis elkezdeni.</div>
+    </a>
+
+    <div class="foot">
+        CustomFalka MVP Plan · 2026. április 13. · Smilestone × Farkas Marcell
+    </div>
+
+</div>
+</body>
+</html>
