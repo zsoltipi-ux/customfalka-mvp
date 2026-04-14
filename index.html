@@ -134,7 +134,7 @@
         </div>
         <div class="box green">
             <h3>3. AI ami úgy gondolkodik mint te</h3>
-            <p>A válaszok alapján az AI kiválasztja a megfelelő F33 epizódokat és gyakorlatokat — pont úgy, mintha te személyesen ajánlanád. A te szavaiddal, a te logikáddal.</p>
+            <p>A válaszok alapján az AI kikeresi a releváns F33 epizódokat (SQL), betölti a teljes kontextust (nem darabokban, hanem egyben), és személyre szabott tervet ír — pont úgy, mintha te személyesen ajánlanád.</p>
         </div>
         <div class="box green">
             <h3>4. A tag megkapja a tervét</h3>
@@ -188,8 +188,8 @@
     <!-- MI CSAPAT -->
     <div class="grid2">
         <div class="box">
-            <h3><span class="tag szente">Szente</span> Fejlesztés — 60-80 óra</h3>
-            <p>A teljes technikai megvalósítás: rendszer felépítése, AI pipeline, admin felület, felhasználói felület, biztonság, éles üzembe helyezés.</p>
+            <h3><span class="tag szente">Szente</span> Fejlesztés — 45-60 óra</h3>
+            <p>A teljes technikai megvalósítás: rendszer felépítése, AI motor, admin felület, felhasználói felület, biztonság, éles üzembe helyezés. RAG pipeline az MVP-ben nem kell — full context megközelítés.</p>
             <details>
                 <summary>Részletes bontás &rarr;</summary>
                 <div class="detail-content">
@@ -206,8 +206,8 @@
                         <div class="dr-hours">5-8 óra</div>
                     </div>
                     <div class="detail-row">
-                        <div class="dr-label"><strong>AI terv-generáló motor</strong><br>A technikai mag: a kérdőív válaszok alapján kikeresi a releváns gyakorlatokat, hozzáadja a te magyarázataidat, és személyre szabott tervet ír. Ez a legtöbb munka.</div>
-                        <div class="dr-hours">20-25 óra</div>
+                        <div class="dr-label"><strong>AI terv-generáló motor</strong><br>SQL keresés (testrész, szint) → releváns epizódok teljes transzkriptje betöltése → Claude API terv generálás. Egyszerűbb mint RAG: nem kell embedding, chunking, vector search.</div>
+                        <div class="dr-hours">8-12 óra</div>
                     </div>
                     <div class="detail-row">
                         <div class="dr-label"><strong>Terv megjelenítés</strong><br>A tag ezt látja: heti bontás, gyakorlat kártyák Skool linkekkel, mobilbarát.</div>
@@ -217,7 +217,7 @@
                         <div class="dr-label"><strong>Biztonság & élesítés</strong><br>Adatvédelem, jogosultságkezelés, éles rendszer indítás.</div>
                         <div class="dr-hours">5-8 óra</div>
                     </div>
-                    <p style="text-align:right; color:#c5a44e; font-weight:700; font-size:0.9rem; margin-top:0.5rem">Összesen: ~60-80 óra</p>
+                    <p style="text-align:right; color:#c5a44e; font-weight:700; font-size:0.9rem; margin-top:0.5rem">Összesen: ~45-60 óra</p>
                 </div>
             </details>
         </div>
@@ -257,7 +257,7 @@
     <div class="highlight-box">
         <div style="display:flex; justify-content:center; gap:2.5rem; flex-wrap:wrap;">
             <div style="text-align:center">
-                <div class="num">60-80</div>
+                <div class="num">45-60</div>
                 <div class="num-label"><span class="tag szente">Szente</span> óra</div>
             </div>
             <div style="text-align:center">
@@ -269,7 +269,7 @@
                 <div class="num-label"><span class="tag marcell">Marcell</span> óra</div>
             </div>
         </div>
-        <p style="color:#888; font-size:0.82rem; margin-top:1rem">Összesen: ~85-118 óra &middot; 4 hét fejlesztés + 2 hét béta teszt</p>
+        <p style="color:#888; font-size:0.82rem; margin-top:1rem">Összesen: ~70-98 óra &middot; 4 hét fejlesztés + 2 hét béta teszt</p>
     </div>
 
     <!-- ==================== ÜTEMTERV ==================== -->
@@ -646,7 +646,7 @@
     <!-- TELJES ÚTTERV -->
     <div class="highlight-box">
         <div class="diagram" style="margin:0; border:none; padding:0.5rem 0; background:transparent; font-size:0.72rem; text-align:left;">
-<span class="hl">MVP</span> — F33 AI coach Lite              ~85-118 óra  · 6 hét
+<span class="hl">MVP</span> — F33 AI coach Lite              ~70-98 óra   · 6 hét
 <span class="hl">Phase 2</span> — Teljes Falka + progresszió   ~40-55 óra   · 4-6 hét
 <span class="hl">Phase 3</span> — Premium 365 Klub AI          ~70-95 óra   · 6-8 hét
 <span class="hl">Phase 4</span> — AI oktatómodul (audio+kvíz)  ~38-55 óra   · 4-6 hét
